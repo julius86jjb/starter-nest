@@ -6,6 +6,11 @@ import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { StoresModule } from './stores/stores.module';
 import { CommonModule } from './common/common.module';
+import { DepartmentsModule } from './departments/departments.module';
+import { CategoriesModule } from './categories/categories.module';
+import { ProductsModule } from './products/products.module';
+import { OrdersModule } from './orders/orders.module';
+import { SalesModule } from './sales/sales.module';
 
 @Module({
   imports: [
@@ -28,6 +33,11 @@ import { CommonModule } from './common/common.module';
     UsersModule,
     StoresModule,
     CommonModule,
+    DepartmentsModule,
+    CategoriesModule,
+    ProductsModule,
+    OrdersModule,
+    SalesModule,
    ],
   controllers: [AppController],
   providers: [AppService],

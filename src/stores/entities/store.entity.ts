@@ -3,26 +3,57 @@ import {
   BeforeInsert,
   BeforeUpdate,
   Column,
+  CreateDateColumn,
   Entity,
+  JoinColumn,
+  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { SocialNetwork } from '../interfaces/social-network.interface';
+import { Product } from 'src/products/entities/product.entity';
+import { Question } from 'src/products/questions/entities/question.entity';
+import { Review } from 'src/products/reviews/entities/review.entity';
+import { Order } from 'src/orders/entities/order.entity';
 
-@Entity()
+@Entity({ name: 'stores' })
 export class Store {
   @PrimaryGeneratedColumn('uuid')
   id: string;
+
+  @OneToOne(() => User)
+  @JoinColumn()
+  user: User;
+
+  @OneToMany(() => Product, (product) => product.store, {
+    cascade: true,
+    eager: true,
+  })
+  products?: Product[];
+
+  @OneToMany(() => Question, (question) => question.store, {
+    cascade: true,
+    eager: true,
+  })
+  questions?: Question[];
+
+  @OneToMany(() => Review, (review) => review.store, {
+    cascade: true,
+    eager: true,
+  })
+  reviews?: Review[];
+
+  @OneToMany(() => Order, (order) => order.store, {
+    cascade: true,
+    eager: true,
+  })
+  orders?: Order[];
 
   @Column('text', {
     unique: true,
   })
   name: string;
-
-  @Column('text')
-  description: string;
-
-  @Column('text')
-  about: string;
 
   @Column('text', {
     unique: true,
@@ -37,6 +68,12 @@ export class Store {
   @Column('text')
   address: string;
 
+  @Column('text')
+  description: string;
+
+  @Column('text')
+  about: string;
+
   @Column('text', {
     unique: true,
   })
@@ -44,8 +81,19 @@ export class Store {
 
   @Column({
     type: 'text',
-    array: true,
-    default: [],
+    nullable: true,
+  })
+  logo: string;
+
+  @Column({
+    type: 'text',
+    nullable: true,
+  })
+  cover_img: string;
+
+  @Column({
+    type: 'jsonb',
+    nullable: true,
   })
   social_networks: SocialNetwork[];
 
@@ -53,6 +101,12 @@ export class Store {
     default: 0,
   })
   products_count: number;
+
+  @CreateDateColumn()
+  created_at: Date;
+
+  @UpdateDateColumn()
+  updated_at: Date;
 
   @BeforeInsert()
   checkSlugInsert() {
@@ -73,13 +127,4 @@ export class Store {
       .replaceAll(' ', '-')
       .replaceAll("'", '');
   }
-
-  // @Column()
-  // logo: string;
-
-  // @Column()
-  // cover_img: string;
-
-  // @Column()
-  // user: User;
 }

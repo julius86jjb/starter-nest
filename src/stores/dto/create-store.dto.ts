@@ -1,40 +1,67 @@
-import { IsArray, IsEmail, IsIn, IsInt, IsOptional, IsPositive, IsString, ValidateNested } from "class-validator";
-import { SocialNetwork, SocialNetworkType } from "../interfaces/social-network.interface";
-import { Type } from "class-transformer";
+import {
+  IsArray,
+  IsDate,
+  IsEmail,
+  IsInt,
+  IsOptional,
+  IsPositive,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
+import { SocialNetwork } from '../interfaces/social-network.interface';
+import { Type } from 'class-transformer';
 
 export class CreateStoreDto {
+  @IsString()
+  name: string;
 
-    @IsString()
-    name: string;
-    
-    @IsString()
-    @IsEmail()
-	email: string;
-    
-    @IsString()
-	phone: string
-    
-    @IsString()
-	address: string;
+  @IsString()
+  @IsEmail()
+  email: string;
 
-    @IsString()
-	description: string;
-    
-    @IsString()
-	about: string;
+  @IsString()
+  phone: string;
 
-    @IsString()
-    @IsOptional()
-    slug?: string;
-    
-    
-    @IsArray()
-    @ValidateNested({ each: true })
-    @IsOptional()
-    @Type(() => SocialNetwork)
-	social_networks?: SocialNetwork[];
-    
-    @IsInt()
-    @IsPositive()
-	products_count: number;
+  @IsString()
+  address: string;
+
+  @IsString()
+  description: string;
+
+  @IsString()
+  about: string;
+
+  @IsString()
+  @IsOptional()
+  slug?: string;
+
+  @IsString()
+  @IsOptional()
+  logo?: string;
+
+  @IsString()
+  @IsOptional()
+  cover_img?: string;
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @IsOptional()
+  @Type(() => SocialNetwork)
+  social_networks?: SocialNetwork[];
+
+  @IsInt()
+  @IsPositive()
+  @IsOptional()
+  products_count?: number;
+
+
+  // @IsDate()
+  // @Type(() => Date)
+  // @IsOptional()
+  // created_at: Date;
+
+  // @IsDate()
+  // @Type(() => Date)
+  // @IsOptional()
+  // updated_at: Date;
 }
