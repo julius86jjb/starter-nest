@@ -12,10 +12,10 @@ export class SeedController {
   @Auth(ValidRoles.admin)
   excecuteSeed(@Param('seed') seed: string) {
     switch (seed) {
-      case 'departments':
-        return this.seedService.runDepartmentsSeed();
-      default:
-        break;
+      // case 'departments':
+      //   return this.seedService.runDepartmentsSeed();
+      // default:
+      //   break;
     }
 
 

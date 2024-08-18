@@ -1,29 +1,28 @@
 import { Injectable } from '@nestjs/common';
-import { DepartmentsService } from 'src/departments/departments.service';
 import { initialData } from './data/seed-data';
 
 
 @Injectable()
 export class SeedService {
 
-  constructor(private departmentsService: DepartmentsService) { }
+  constructor() { }
 
 
-  async runDepartmentsSeed() {
-    await this.departmentsService.deleteAllProducts();
+  // async runDepartmentsSeed() {
+  //   await this.departmentsService.deleteAllProducts();
 
-    const departments = initialData.departments;
+  //   const departments = initialData.departments;
 
-    const insertPromises = [];
+  //   const insertPromises = [];
 
-    departments.forEach(department => {
-      insertPromises.push(this.departmentsService.create(department));
-    })
+  //   departments.forEach(department => {
+  //     insertPromises.push(this.departmentsService.create(department));
+  //   })
 
-    await Promise.all(insertPromises);
+  //   await Promise.all(insertPromises);
 
-    return 'DEPARTMENTS SEED EXECUTED';
-  }
+  //   return 'DEPARTMENTS SEED EXECUTED';
+  // }
 
 
 }

@@ -53,9 +53,9 @@ app.useGlobalPipes(
 // npm install  @nestjs/passport passport 
 // npm install  @nestjs/jwt passport-jwt
 
-
-/// Auth Module //
-/// Users Modules
+/// Seed Module ///
+/// Auth Module ///
+/// Users Modules ///
 
 
 
