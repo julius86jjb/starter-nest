@@ -16,12 +16,14 @@ export class Department {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToMany(() => Category, (category) => category.department, { cascade: true, eager: true })
+  @OneToMany(
+    () => Category,
+    (category) => category.department,
+    { cascade: true, eager: true }
+  )
   categories?: Category[];
 
-  @OneToMany(() => Product, (product) => product.department, {
-    cascade: true,
-  })
+  @OneToMany(() => Product, (product) => product.department)
   products?: Product[];
 
   @Column('text', {

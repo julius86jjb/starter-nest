@@ -18,43 +18,38 @@ import { HorizontalSlider } from '../interfaces/product_horizontal_slider';
 import { ProductOption } from '../interfaces/product_option.interface';
 import { ProductSpecification } from '../interfaces/product_specification.interface';
 import { TopBanner } from '../interfaces/top_banner.interface';
-import { Question } from '../questions/entities/question.entity';
-import { Review } from '../reviews/entities/review.entity';
-import { ProductImage } from './product-image.entity';
+import { Question } from 'src/questions/entities/question.entity';
+import { Review } from 'src/reviews/entities/review.entity';
+import { ProductImage } from '../products-images/entities/product-image.entity';
 
 @Entity({ name: 'products' })
 export class Product {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => Department, (department) => department.products)
+  @ManyToOne(() => Department, (department) => department.products, { onDelete: 'CASCADE', eager: true })
   department: Department;
 
-  @ManyToOne(() => Category, (category) => category.products)
+  @ManyToOne(() => Category, (category) => category.products, { onDelete: 'CASCADE', eager: true })
   category: Category;
 
-  @ManyToOne(() => Store, (store) => store.products)
+  @ManyToOne(() => Store, (store) => store.products, { onDelete: 'CASCADE' })
   store: Store;
 
-  @OneToMany(() => Question, (question) => question.product, {
-    cascade: true,
-  })
+  @OneToMany(() => Question, (question) => question.product, {eager: true})
   questions?: Question[];
 
-  @OneToMany(() => Review, (review) => review.product, {
-    cascade: true,
-  })
+  @OneToMany(() => Review, (review) => review.product, {eager: true})
   reviews?: Review[];
 
-  @OneToMany(() => ProductImage, (productImage) => productImage.product, {
-    cascade: true,
-  })
+  @OneToMany(
+    () => ProductImage,
+    (productImage) => productImage.product,
+    { cascade: true, eager: true }
+  )
   images?: ProductImage[];
 
-  @OneToMany(() => Order, (order) => order.store, {
-    cascade: true,
-    eager: true,
-  })
+  @OneToMany(() => Order, (order) => order.store)
   orders?: Order[];
 
 

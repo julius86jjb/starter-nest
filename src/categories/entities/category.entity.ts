@@ -17,15 +17,14 @@ export class Category {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => Department, (department) => department.categories, {
-    onDelete: 'CASCADE',
-  })
+  @ManyToOne(
+    () => Department,
+    (department) => department.categories,
+    { onDelete: 'CASCADE' }
+  )
   department: Department;
 
-  @OneToMany(() => Product, (product) => product.category, {
-    cascade: true,
-    eager: true,
-  })
+  @OneToMany(() => Product, (product) => product.category)
   products?: Product[];
 
 

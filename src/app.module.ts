@@ -10,7 +10,12 @@ import { DepartmentsModule } from './departments/departments.module';
 import { CategoriesModule } from './categories/categories.module';
 import { ProductsModule } from './products/products.module';
 import { OrdersModule } from './orders/orders.module';
-import { SalesModule } from './sales/sales.module';
+import { QuestionsModule } from './questions/questions.module';
+import { ReviewsModule } from './reviews/reviews.module';
+import { SeedModule } from './seed/seed.module';
+import { FilesModule } from './files/files.module';
+import { CloudinaryModule } from './cloudinary/cloudinary.module';
+import { AuthModule } from './users/auth/auth.module';
 
 @Module({
   imports: [
@@ -37,7 +42,12 @@ import { SalesModule } from './sales/sales.module';
     CategoriesModule,
     ProductsModule,
     OrdersModule,
-    SalesModule,
+    QuestionsModule,
+    ReviewsModule,
+    SeedModule,
+    FilesModule,
+    CloudinaryModule,
+    AuthModule
    ],
   controllers: [AppController],
   providers: [AppService],

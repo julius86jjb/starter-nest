@@ -1,7 +1,7 @@
-import { IsBoolean, IsOptional } from 'class-validator';
+import { IsBoolean, IsString } from 'class-validator';
 import { Order } from 'src/orders/entities/order.entity';
-import { Question } from 'src/products/questions/entities/question.entity';
-import { Review } from 'src/products/reviews/entities/review.entity';
+import { Question } from 'src/questions/entities/question.entity';
+import { Review } from 'src/reviews/entities/review.entity';
 import { Store } from 'src/stores/entities/store.entity';
 import {
   BeforeInsert,
@@ -15,29 +15,23 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { ValidRoles } from '../auth/interfaces/valid-roles.interface';
 
 @Entity({ name: 'users' })
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne(() => Store)
-  @JoinColumn()
-  store: Store;
+  @OneToOne(() => Store, (store) => store.user, { eager: true })
+  store?: Store;
 
-  @OneToMany(() => Order, (order) => order.buyer, { cascade: true, eager: true })
+  @OneToMany(() => Order, (order) => order.buyer, { eager: true })
   orders?: Order[];
 
-  @OneToMany(() => Question, (question) => question.user, {
-    cascade: true,
-    eager: true,
-  })
-  questions?: Order[];
+  @OneToMany(() => Question, (question) => question.user, { eager: true })
+  questions?: Question[];
 
-  @OneToMany(() => Review, (review) => review.user, {
-    cascade: true,
-    eager: true,
-  })
+  @OneToMany(() => Review, (review) => review.user, { eager: true })
   reviews?: Review[];
 
   @Column('text', {
@@ -70,6 +64,7 @@ export class User {
   @Column({
     type: 'text',
     nullable: true,
+    unique: true
   })
   phone: string;
 
@@ -85,8 +80,13 @@ export class User {
   @Column('bool', {
     default: true,
   })
-  @IsBoolean()
   isActive: boolean;
+
+  @Column('text', {
+    array: true,
+    default:['user']
+  })
+  roles: ValidRoles[] 
 
   @CreateDateColumn()
   created_at: Date;

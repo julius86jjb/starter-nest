@@ -21,11 +21,11 @@ export class CreateDepartmentDto {
 
   @IsString()
   @IsOptional()
-  slug: string;
+  slug?: string;
 
   @IsString()
   @IsOptional()
-  img: string;
+  img?: string;
 
   @IsString()
   icon: string;
@@ -33,11 +33,9 @@ export class CreateDepartmentDto {
   @IsInt()
   @IsPositive()
   @IsOptional()
-  views: number;
+  views?: number;
 
   @IsArray()
-  @ValidateNested({ each: true })
   @IsOptional()
-  @Type(() => CreateCategoryDto)
   categories?: CreateCategoryDto[];
 }

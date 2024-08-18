@@ -3,8 +3,6 @@ import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
 import { UpdateCategoryDto } from './dto/update-category.dto';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
-import { GetDep } from 'src/departments/decorators/get-department.decorator';
-import { Department } from 'src/departments/entities/department.entity';
 
 @Controller('categories')
 export class CategoriesController {
@@ -21,6 +19,7 @@ export class CategoriesController {
   findAll(@Query() paginationDTO: PaginationDto) {
     return this.categoriesService.findAll(paginationDTO);
   }
+  
 
   @Get(':term')
   findOne(@Param('term') term: string) {

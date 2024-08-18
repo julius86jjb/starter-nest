@@ -12,6 +12,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { validate as isUUID } from 'uuid';
+import { HandleExceptionsService } from 'src/common/services/handle-exceptions.service';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class StoresService {
@@ -20,16 +22,21 @@ export class StoresService {
   constructor(
     @InjectRepository(Store)
     private readonly storeRepository: Repository<Store>,
+    private handleExceptionsService: HandleExceptionsService,
+
   ) {}
 
-  async create(createStoreDto: CreateStoreDto) {
+  async create(createStoreDto: CreateStoreDto, user: User) {
     try {
-      const store = this.storeRepository.create(createStoreDto);
+      const store = this.storeRepository.create({
+        ...createStoreDto,
+        user: user
+      });
       await this.storeRepository.save(store);
 
       return store;
     } catch (error) {
-      this.handleDBExceptions(error);
+      this.handleExceptionsService.handleDBExceptions(error);
     }
   }
 
@@ -73,7 +80,7 @@ export class StoresService {
 
       return store;
     } catch (error) {
-      this.handleDBExceptions(error);
+      this.handleExceptionsService.handleDBExceptions(error);
     }
   }
 
@@ -82,12 +89,16 @@ export class StoresService {
     await this.storeRepository.remove(store);
   }
 
-  private handleDBExceptions(error: any) {
-    if ((error.code = '23505')) throw new BadRequestException(error.detail);
+  async deleteAllProducts(){
+    const query = this.storeRepository.createQueryBuilder('store')
 
-    this.logger.error(error);
-    console.log(error);
-
-    throw new InternalServerErrorException('Unexpected error, check logs');
+    try {
+      return await query
+        .delete()
+        .where({})
+        .execute()
+    } catch (error) {
+      this.handleExceptionsService.handleDBExceptions(error);
+    }
   }
 }

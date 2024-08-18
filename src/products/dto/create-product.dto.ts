@@ -15,7 +15,6 @@ import {
 import { Category } from 'src/categories/entities/category.entity';
 import { Department } from 'src/departments/entities/department.entity';
 import { Store } from 'src/stores/entities/store.entity';
-import { ProductImage } from '../entities/product-image.entity';
 import { Discount } from '../interfaces/discount.interface';
 import { HorizontalSlider } from '../interfaces/product_horizontal_slider';
 import { ProductOption } from '../interfaces/product_option.interface';
@@ -28,9 +27,6 @@ export class CreateProductDto {
 
   @IsUUID()
   category: Category;
-
-  @IsUUID()
-  store: Store;
 
   @IsString()
   name: string;
@@ -135,5 +131,5 @@ export class CreateProductDto {
   @IsString({ each: true })
   @IsArray()
   @IsOptional()
-  images?: ProductImage[];
+  images: string[];
 }

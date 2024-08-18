@@ -11,7 +11,6 @@ import {
 } from 'class-validator';
 import { Product } from 'src/products/entities/product.entity';
 import { Store } from 'src/stores/entities/store.entity';
-import { User } from 'src/users/entities/user.entity';
 import { Status } from '../entities/order.entity';
 
 export class CreateOrderDto {
@@ -20,9 +19,6 @@ export class CreateOrderDto {
 
   @IsUUID()
   product: Product;
-
-  @IsUUID()
-  buyer: User;
 
   @IsInt()
   @IsPositive()
@@ -41,7 +37,7 @@ export class CreateOrderDto {
 
   @IsString()
   @IsOptional()
-  id_payment;
+  id_payment?;
 
   @IsBoolean()
   completed: boolean;

@@ -54,14 +54,4 @@ export class CreateStoreDto {
   @IsOptional()
   products_count?: number;
 
-
-  // @IsDate()
-  // @Type(() => Date)
-  // @IsOptional()
-  // created_at: Date;
-
-  // @IsDate()
-  // @Type(() => Date)
-  // @IsOptional()
-  // updated_at: Date;
 }

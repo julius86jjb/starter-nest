@@ -12,6 +12,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { isUUID } from 'class-validator';
 import { Category } from 'src/categories/entities/category.entity';
+import { HandleExceptionsService } from 'src/common/services/handle-exceptions.service';
 
 @Injectable()
 export class DepartmentsService {
@@ -22,25 +23,28 @@ export class DepartmentsService {
     private readonly departmentRepository: Repository<Department>,
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
-  ) {}
+    private handleExceptionsService: HandleExceptionsService,
+  ) { }
 
   async create(createDepartmentDto: CreateDepartmentDto) {
+
     try {
       const { categories = [], ...departmentDetails } = createDepartmentDto;
       const department = this.departmentRepository.create({
         ...departmentDetails,
-        categories: categories.map((c) =>
-          this.categoryRepository.create({
-            name: c.name,
-            department_title: c.department_title
-          }),
-        ),
-      });
+        categories: categories.map((category) => this.categoryRepository.create({
+          name: category.name,
+          department_title: category.department_title,
+          img: category.img ? category.img : null,
+          inventory: category.inventory ? category.inventory : 0,
+          views:category.views ? category.views : 0,
+        }))
+      })
       await this.departmentRepository.save(department);
 
       return department;
     } catch (error) {
-      this.handleDBExceptions(error);
+      this.handleExceptionsService.handleDBExceptions(error);
     }
   }
 
@@ -89,7 +93,7 @@ export class DepartmentsService {
 
       return department;
     } catch (error) {
-      this.handleDBExceptions(error);
+      this.handleExceptionsService.handleDBExceptions(error);
     }
   }
 
@@ -99,12 +103,18 @@ export class DepartmentsService {
     return deparment;
   }
 
-  private handleDBExceptions(error: any) {
-    // if ((error.code = '23505')) throw new BadRequestException(error.detail);
 
-    this.logger.error(error);
-    console.log(error);
 
-    throw new InternalServerErrorException('Unexpected error, check logs');
+  async deleteAllProducts() {
+    const query = this.departmentRepository.createQueryBuilder('department')
+
+    try {
+      return await query
+        .delete()
+        .where({})
+        .execute()
+    } catch (error) {
+      this.handleExceptionsService.handleDBExceptions(error);
+    }
   }
 }

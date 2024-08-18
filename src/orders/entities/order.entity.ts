@@ -24,7 +24,7 @@ export class Status {
 
   @IsString()
   @IsOptional()
-  comment: string | null;
+  comment?: string | null;
 
   @IsBoolean()
   completed: boolean;
@@ -36,18 +36,18 @@ export class Status {
   updated_at: Date;
 }
 
-@Entity('orders')
+@Entity({name:'orders'})
 export class Order {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => Store, (store) => store.orders)
+  @ManyToOne(() => Store, (store) => store.orders, {onDelete : 'CASCADE'})
   store: Store;
 
-  @ManyToOne(() => Product, (product) => product.orders)
+  @ManyToOne(() => Product, (product) => product.orders, {eager: true})
   product: Product;
 
-  @ManyToOne(() => User, (user) => user.orders)
+  @ManyToOne(() => User, (user) => user.orders, {onDelete : 'CASCADE'})
   buyer: User;
 
   @Column('numeric', {

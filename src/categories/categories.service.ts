@@ -12,6 +12,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Category } from './entities/category.entity';
 import { isUUID } from 'class-validator';
+import { HandleExceptionsService } from 'src/common/services/handle-exceptions.service';
 
 @Injectable()
 export class CategoriesService {
@@ -20,6 +21,7 @@ export class CategoriesService {
   constructor(
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
+    private handleExceptionsService: HandleExceptionsService,
   ) {}
 
   
@@ -28,11 +30,12 @@ export class CategoriesService {
       const category = this.categoryRepository.create({
         ...createCategoryDto
       });
+      console.log(category);
       await this.categoryRepository.save(category);
 
       return category;
     } catch (error) {
-      this.handleDBExceptions(error);
+      this.handleExceptionsService.handleDBExceptions(error);
     }
   }
 
@@ -80,7 +83,7 @@ export class CategoriesService {
 
       return category;
     } catch (error) {
-      this.handleDBExceptions(error);
+      this.handleExceptionsService.handleDBExceptions(error);
     }
   }
 
@@ -90,12 +93,17 @@ export class CategoriesService {
     return category;
   }
 
-  private handleDBExceptions(error: any) {
-    if ((error.code = '23505')) throw new BadRequestException(error);
 
-    this.logger.error(error);
-    console.log(error);
+  async deleteAllCats(){
+    const query = this.categoryRepository.createQueryBuilder('categories')
 
-    throw new InternalServerErrorException('Unexpected error, check logs');
+    try {
+      return await query
+        .delete()
+        .where({})
+        .execute()
+    } catch (error) {
+      this.handleExceptionsService.handleDBExceptions(error);
+    }
   }
 }

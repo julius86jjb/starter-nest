@@ -13,9 +13,10 @@ import {
 } from 'typeorm';
 import { SocialNetwork } from '../interfaces/social-network.interface';
 import { Product } from 'src/products/entities/product.entity';
-import { Question } from 'src/products/questions/entities/question.entity';
-import { Review } from 'src/products/reviews/entities/review.entity';
+
 import { Order } from 'src/orders/entities/order.entity';
+import { Question } from 'src/questions/entities/question.entity';
+import { Review } from 'src/reviews/entities/review.entity';
 
 @Entity({ name: 'stores' })
 export class Store {
@@ -27,25 +28,21 @@ export class Store {
   user: User;
 
   @OneToMany(() => Product, (product) => product.store, {
-    cascade: true,
     eager: true,
   })
   products?: Product[];
 
   @OneToMany(() => Question, (question) => question.store, {
-    cascade: true,
     eager: true,
   })
   questions?: Question[];
 
   @OneToMany(() => Review, (review) => review.store, {
-    cascade: true,
     eager: true,
   })
   reviews?: Review[];
 
   @OneToMany(() => Order, (order) => order.store, {
-    cascade: true,
     eager: true,
   })
   orders?: Order[];

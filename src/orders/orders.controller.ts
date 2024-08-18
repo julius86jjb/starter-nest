@@ -1,34 +1,50 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { OrdersService } from './orders.service';
+import { Body, Controller, Delete, Get, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
+import { PaginationDto } from 'src/common/dtos/pagination.dto';
+import { ValidRoles } from 'src/users/auth/interfaces/valid-roles.interface';
+import { Auth } from '../users/auth/decorators/auth.decorator';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
+import { OrdersService } from './orders.service';
+import { GetUser } from 'src/users/auth/decorators/get-user.decorator';
+import { User } from '../users/entities/user.entity';
 
 @Controller('orders')
 export class OrdersController {
-  constructor(private readonly ordersService: OrdersService) {}
+  constructor(private readonly ordersService: OrdersService) { }
 
   @Post()
-  create(@Body() createOrderDto: CreateOrderDto) {
-    return this.ordersService.create(createOrderDto);
+  @Auth()
+  create(
+    @Body() createOrderDto: CreateOrderDto,
+    @GetUser() user: User
+  ) {
+    return this.ordersService.create(createOrderDto, user);
   }
 
   @Get()
-  findAll() {
-    return this.ordersService.findAll();
+  @Auth(ValidRoles.admin)
+  findAll(
+    @Query() paginationDTO: PaginationDto,
+  ) {
+    return this.ordersService.findAll(paginationDTO);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.ordersService.findOne(+id);
+  @Get(':term')
+  @Auth(ValidRoles.admin)
+  findOne(@Param('term') term: string) {
+    return this.ordersService.findOne(term);
   }
+
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateOrderDto: UpdateOrderDto) {
-    return this.ordersService.update(+id, updateOrderDto);
+  @Auth(ValidRoles.admin, ValidRoles.partner)
+  update(@Param('id', ParseUUIDPipe) id: string, @Body() updateOrderDto: UpdateOrderDto) {
+    return this.ordersService.update(id, updateOrderDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.ordersService.remove(+id);
+  @Auth(ValidRoles.admin)
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    return this.ordersService.remove(id);
   }
 }
